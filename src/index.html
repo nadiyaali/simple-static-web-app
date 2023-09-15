@@ -17,7 +17,15 @@
         <p>Developed a Campground Review Website with front end using HTML5, Bootstrap and backend using Node.js with Express.js and MongoDB with mongoose. Data Schema validation using Joi, Authorization and authentication using passport and dynamic webpage generation using ejs(Embedded Javascript).</p>
       </li>
     </ul>
+    <p>Loading content from the API: <b id="name">...</b></p>
+  </main>
 
+  <script>
+  (async function() {
+      const { text } = await( await fetch(`/api/message`)).json();
+      document.querySelector('#name').textContent = text;
+  }());
+  </script>
 
   </main>
 </body>
