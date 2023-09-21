@@ -8,7 +8,7 @@
   <title>Portfolio</title>
 </head>
 
-<body>
+<body onload="updatecounter()">
   <main>
     <h1>Portfolio</h1>
     <ul>
@@ -18,7 +18,7 @@
       </li>
     </ul>
     <p>Loading content from the API: <b id="name">...</b></p>
-  </main>
+ 
 
   <script>
   (async function() {
@@ -26,6 +26,185 @@
       document.querySelector('#name').textContent = text;
   }());
   </script>
+
+<h2>Static Web Apps Database Connections</h2>
+<blockquote>
+    Open the console in the browser developer tools to see the API responses.
+</blockquote>
+<div>
+    <button id="list" onclick="list()">List</button>
+    <button id="get" onclick="get()">Get</button>
+    <button id="update" onclick="update()">Update</button>
+    <button id="create" onclick="create()">Create</button>
+    <button id="delete" onclick="del()">Delete</button>
+</br>
+<button id="updateCounter" onclick="updatecounter()">Update Counter</button>
+
+</div>
+<script>
+   async function list() {
+
+const query = `
+    {
+      people {
+        items {
+          id
+          Name
+          Count
+        }
+      }
+    }`;
+    
+const endpoint = "/data-api/graphql";
+const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query: query })
+});
+const result = await response.json();
+console.table(result.data.people.items);
+}
+
+async function get() {
+
+const id = '0000';
+
+const gql = `
+  query getById($id: ID!) {
+    person_by_pk(id: $id) {
+      id
+      Name
+      Count
+    }
+  }`;
+
+const query = {
+  query: gql,
+  variables: {
+    id: id,
+  },
+};
+
+const endpoint = "/data-api/graphql";
+const response = await fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(query),
+});
+const result = await response.json();
+console.table(result.data.person_by_pk);
+}
+
+async function update() {
+
+const id = '1';
+const data = {
+  id: id,
+  Name: "Molly"
+};
+
+const gql = `
+  mutation update($id: ID!, $_partitionKeyValue: String!, $item: UpdatePersonInput!) {
+    updatePerson(id: $id, _partitionKeyValue: $_partitionKeyValue, item: $item) {
+      id
+      Name
+    }
+  }`;
+
+const query = {
+  query: gql,
+  variables: {
+    id: id,
+    _partitionKeyValue: id,
+    item: data
+  } 
+};
+
+const endpoint = "/data-api/graphql";
+const res = await fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(query)
+});
+
+const result = await res.json();
+console.table(result.data.updatePerson);
+}
+
+
+async function updatecounter() {
+
+// First get the counter
+const id = '0000';
+
+const gqlget = `
+  query getById($id: ID!) {
+    person_by_pk(id: $id) {
+      id
+      Name
+      Count
+    }
+  }`;
+
+const query = {
+  query: gqlget,
+  variables: {
+    id: id,
+  },
+};
+
+const endpoint = "/data-api/graphql";
+const response = await fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(query),
+});
+const resultget = await response.json();
+console.table(resultget.data.person_by_pk);
+
+const visitorcount = resultget.data.person_by_pk.Count;
+console.log(visitorcount);
+let vcount = Number(visitorcount);
+vcount = vcount + 1
+//const id = '0000';
+const data = {
+  id: id,
+  Name: "Visitor Count",
+  Count: vcount.toString()
+};
+
+const gqlupdate = `
+  mutation update($id: ID!, $_partitionKeyValue: String!, $item: UpdatePersonInput!) {
+    updatePerson(id: $id, _partitionKeyValue: $_partitionKeyValue, item: $item) {
+      id
+      Count
+    }
+  }`;
+
+const queryupdate = {
+  query: gqlupdate,
+  variables: {
+    id: id,
+    _partitionKeyValue: id,
+    item: data
+  } 
+};
+
+//const endpoint = "/data-api/graphql";
+const res = await fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(queryupdate)
+});
+
+const result = await res.json();
+console.table(result.data.updatePerson);
+}
+
+
+</script>
+
+
 
   </main>
 </body>
