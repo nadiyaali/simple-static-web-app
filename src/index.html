@@ -5,46 +5,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <title>Portfolio</title>
+
+  <title>Pricing Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
 </head>
 
 <body onload="updatecounter()">
   <main>
-    <h1>Portfolio</h1>
-    <ul>
-      <li>
-        <h2><a href="https://examplenad-app.herokuapp.com/">GoCamp</a></h2>
-        <p>Developed a Campground Review Website with front end using HTML5, Bootstrap and backend using Node.js with Express.js and MongoDB with mongoose. Data Schema validation using Joi, Authorization and authentication using passport and dynamic webpage generation using ejs(Embedded Javascript).</p>
-      </li>
-    </ul>
-    <p>Loading content from the API: <b id="name">...</b></p>
- 
-
-  <script>
-  (async function() {
-      const { text } = await( await fetch(`/api/message`)).json();
-      document.querySelector('#name').textContent = text;
-  }());
-  </script>
-
-<h2>Static Web Apps Database Connections</h2>
-<blockquote>
-    Open the console in the browser developer tools to see the API responses.
-</blockquote>
-<div>
-    <button id="list" onclick="list()">List</button>
-    <button id="get" onclick="get()">Get</button>
-    <button id="update" onclick="update()">Update</button>
-    <button id="create" onclick="create()">Create</button>
-    <button id="delete" onclick="del()">Delete</button>
-</br>
-<button id="updateCounter" onclick="updatecounter()">Update Counter</button>
-
+    <div class="panel pricing-table">
+    <h2 class="pricing-header">You are visitor number: <b id="counter">...</b></h2>
 </div>
-<script>
-   async function list() {
+    <div class="panel pricing-table">
 
-const query = `
+      <div class="pricing-plan">
+        <img src="icons/icon1.png" alt="" class="pricing-img">
+        <h2 class="pricing-header">Personal</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Custom Domains</li>
+          <li class="pricing-features-item">Sleeps after 30 mins</li>
+
+        </ul>
+        <span class="pricing-price">Free</span>
+        <a href="" class="pricing-button">Sign up</a>
+      </div>
+
+
+      <div class="pricing-plan">
+        <img src="icons/icon2.png" alt="" class="pricing-img">
+        <h2 class="pricing-header">Small team</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Never sleeps</li>
+          <li class="pricing-features-item">Multiple workers for more powerful apps</li>
+        </ul>
+        <span class="pricing-price">$150</span>
+        <a href="" class="pricing-button is-featured">Sign up</a>
+      </div>
+
+
+      <div class="pricing-plan">
+        <img src="icons/icon3.png" alt="" class="pricing-img">
+        <h2 class="pricing-header">Enterprise</h2>
+        <ul class="pricing-features">
+          <li class="pricing-features-item">Dedicated</li>
+          <li class="pricing-features-item">Simple horizontal scalability</li>
+
+        </ul>
+        <span class="pricing-price">$400</span>
+        <a href="" class="pricing-button">Free trial</a>
+      </div>
+    </div>
+
+
+    <p>Loading content from the API: <b id="name">...</b></p>
+
+
+
+    <h2>Static Web Apps Database Connections</h2>
+    <blockquote>
+      Open the console in the browser developer tools to see the API responses.
+    </blockquote>
+    <div>
+      <button id="list" onclick="list()">List</button>
+      <button id="get" onclick="get()">Get</button>
+      <button id="update" onclick="update()">Update</button>
+      <button id="create" onclick="create()">Create</button>
+      <button id="delete" onclick="del()">Delete</button>
+      </br>
+      <button id="updateCounter" onclick="updatecounter()">Update Counter</button>
+
+    </div>
+    <script>
+      (async function() {
+          const { text } = await( await fetch(`/api/message`)).json();
+          document.querySelector('#name').textContent = text;
+      }());
+      </script>
+
+
+    <script>
+      async function list() {
+
+        const query = `
     {
       people {
         items {
@@ -54,22 +97,22 @@ const query = `
         }
       }
     }`;
-    
-const endpoint = "/data-api/graphql";
-const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: query })
-});
-const result = await response.json();
-console.table(result.data.people.items);
-}
 
-async function get() {
+        const endpoint = "/data-api/graphql";
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: query })
+        });
+        const result = await response.json();
+        console.table(result.data.people.items);
+      }
 
-const id = '0000';
+      async function get() {
 
-const gql = `
+        const id = '0000';
+
+        const gql = `
   query getById($id: ID!) {
     person_by_pk(id: $id) {
       id
@@ -78,32 +121,32 @@ const gql = `
     }
   }`;
 
-const query = {
-  query: gql,
-  variables: {
-    id: id,
-  },
-};
+        const query = {
+          query: gql,
+          variables: {
+            id: id,
+          },
+        };
 
-const endpoint = "/data-api/graphql";
-const response = await fetch(endpoint, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(query),
-});
-const result = await response.json();
-console.table(result.data.person_by_pk);
-}
+        const endpoint = "/data-api/graphql";
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(query),
+        });
+        const result = await response.json();
+        console.table(result.data.person_by_pk);
+      }
 
-async function update() {
+      async function update() {
 
-const id = '1';
-const data = {
-  id: id,
-  Name: "Molly"
-};
+        const id = '1';
+        const data = {
+          id: id,
+          Name: "Molly"
+        };
 
-const gql = `
+        const gql = `
   mutation update($id: ID!, $_partitionKeyValue: String!, $item: UpdatePersonInput!) {
     updatePerson(id: $id, _partitionKeyValue: $_partitionKeyValue, item: $item) {
       id
@@ -111,33 +154,33 @@ const gql = `
     }
   }`;
 
-const query = {
-  query: gql,
-  variables: {
-    id: id,
-    _partitionKeyValue: id,
-    item: data
-  } 
-};
+        const query = {
+          query: gql,
+          variables: {
+            id: id,
+            _partitionKeyValue: id,
+            item: data
+          }
+        };
 
-const endpoint = "/data-api/graphql";
-const res = await fetch(endpoint, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(query)
-});
+        const endpoint = "/data-api/graphql";
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(query)
+        });
 
-const result = await res.json();
-console.table(result.data.updatePerson);
-}
+        const result = await res.json();
+        console.table(result.data.updatePerson);
+      }
 
 
-async function updatecounter() {
+      async function updatecounter() {
 
-// First get the counter
-const id = '0000';
+        // First get the counter
+        const id = '0000';
 
-const gqlget = `
+        const gqlget = `
   query getById($id: ID!) {
     person_by_pk(id: $id) {
       id
@@ -146,34 +189,34 @@ const gqlget = `
     }
   }`;
 
-const query = {
-  query: gqlget,
-  variables: {
-    id: id,
-  },
-};
+        const query = {
+          query: gqlget,
+          variables: {
+            id: id,
+          },
+        };
 
-const endpoint = "/data-api/graphql";
-const response = await fetch(endpoint, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(query),
-});
-const resultget = await response.json();
-console.table(resultget.data.person_by_pk);
+        const endpoint = "/data-api/graphql";
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(query),
+        });
+        const resultget = await response.json();
+        console.table(resultget.data.person_by_pk);
 
-const visitorcount = resultget.data.person_by_pk.Count;
-console.log(visitorcount);
-let vcount = Number(visitorcount);
-vcount = vcount + 1
-//const id = '0000';
-const data = {
-  id: id,
-  Name: "Visitor Count",
-  Count: vcount.toString()
-};
+        const visitorcount = resultget.data.person_by_pk.Count;
+        console.log(visitorcount);
+        let vcount = Number(visitorcount);
+        vcount = vcount + 1
+        //const id = '0000';
+        const data = {
+          id: id,
+          Name: "Visitor Count",
+          Count: vcount.toString()
+        };
 
-const gqlupdate = `
+        const gqlupdate = `
   mutation update($id: ID!, $_partitionKeyValue: String!, $item: UpdatePersonInput!) {
     updatePerson(id: $id, _partitionKeyValue: $_partitionKeyValue, item: $item) {
       id
@@ -181,28 +224,29 @@ const gqlupdate = `
     }
   }`;
 
-const queryupdate = {
-  query: gqlupdate,
-  variables: {
-    id: id,
-    _partitionKeyValue: id,
-    item: data
-  } 
-};
+        const queryupdate = {
+          query: gqlupdate,
+          variables: {
+            id: id,
+            _partitionKeyValue: id,
+            item: data
+          }
+        };
 
-//const endpoint = "/data-api/graphql";
-const res = await fetch(endpoint, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(queryupdate)
-});
+        //const endpoint = "/data-api/graphql";
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(queryupdate)
+        });
 
-const result = await res.json();
-console.table(result.data.updatePerson);
-}
+        const result = await res.json();
+        console.table(result.data.updatePerson);
+        document.querySelector('#counter').textContent = vcount.toString();
+      }
 
 
-</script>
+    </script>
 
 
 
