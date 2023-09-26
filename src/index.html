@@ -58,10 +58,12 @@
     </div>
 
 
-    <p>Loading content from the API: <b id="name">...</b></p>
+    <!-- <p>Loading content from the API: <b id="name">...</b></p> -->
+    <div class="panel pricing-table">
+      <h2 class="pricing-header">Loading date from the API: <b id="name">...</b></h2>
+  </div>
 
-
-
+<!-- 
     <h2>Static Web Apps Database Connections</h2>
     <blockquote>
       Open the console in the browser developer tools to see the API responses.
@@ -76,6 +78,7 @@
       <button id="updateCounter" onclick="updatecounter()">Update Counter</button>
 
     </div>
+     -->
     <script>
       (async function() {
           const { text } = await( await fetch(`/api/message`)).json();
